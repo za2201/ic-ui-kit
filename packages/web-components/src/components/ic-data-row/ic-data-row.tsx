@@ -36,7 +36,7 @@ export class DataRow {
 
   @State() deviceSize: number = DEVICE_SIZES.XL;
 
-  @State() entitySize: "xl" | "m" | "xs";
+  @State() listSize: "xl" | "m" | "xs";
 
   private resizeObserver: ResizeObserver = null;
 
@@ -53,11 +53,11 @@ export class DataRow {
   private checkLabelAbove() {
     const rowSize = this.el.shadowRoot.querySelector(".data")?.clientWidth;
     if (rowSize + 46 < DEVICE_SIZES.S) {
-      this.entitySize = "xs";
+      this.listSize = "xs";
     } else if (rowSize + 46 < DEVICE_SIZES.M) {
-      this.entitySize = "m";
+      this.listSize = "m";
     } else {
-      this.entitySize = "xl";
+      this.listSize = "xl";
     }
   }
 
@@ -97,8 +97,8 @@ export class DataRow {
       <Host
         class={{
           ["small"]: small,
-          ["breakpoint-medium"]: this.entitySize === "m",
-          ["breakpoint-xs"]: this.entitySize === "xs",
+          ["breakpoint-medium"]: this.listSize === "m",
+          ["breakpoint-xs"]: this.listSize === "xs",
         }}
         role="listitem"
       >
@@ -107,9 +107,7 @@ export class DataRow {
             <div class="label">
               <slot name="label">
                 <ic-typography
-                  variant={
-                    this.entitySize === "xs" ? "label" : "subtitle-large"
-                  }
+                  variant={this.listSize === "xs" ? "label" : "subtitle-large"}
                 >
                   {label}
                 </ic-typography>

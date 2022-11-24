@@ -1,4 +1,4 @@
-# ic-data-entity
+# ic-data-list
 
 
 
@@ -9,7 +9,7 @@
 
 | Property  | Attribute | Description                                                   | Type      | Default     |
 | --------- | --------- | ------------------------------------------------------------- | --------- | ----------- |
-| `heading` | `heading` | Title for the data entity                                     | `string`  | `undefined` |
+| `heading` | `heading` | Title for the data list                                       | `string`  | `undefined` |
 | `small`   | `small`   | Set the data heading and all child data rows to small styling | `boolean` | `false`     |
 
 
@@ -22,8 +22,8 @@
 ### Graph
 ```mermaid
 graph TD;
-  ic-data-entity --> ic-typography
-  style ic-data-entity fill:#f9f,stroke:#333,stroke-width:4px
+  ic-data-list --> ic-typography
+  style ic-data-list fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------
