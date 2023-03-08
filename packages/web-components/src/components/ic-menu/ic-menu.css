@@ -63,6 +63,14 @@
   align-items: center;
 }
 
+.loading-option {
+  justify-content: normal;
+}
+
+.timeout {
+  padding: 0.25rem 0.438rem;
+}
+
 :host([small]) .option {
   padding: 0.25rem 0.438rem;
 }
@@ -93,6 +101,27 @@
 
 .option-text-container {
   pointer-events: none;
+}
+
+.option.loading-option .option-text-container {
+  margin-left: 0.625rem;
+  color: var(--ic-color-secondary-text);
+}
+
+.error-icon {
+  margin-right: calc(var(--ic-space-xxs) * 1.2);
+  display: flex;
+  align-items: center;
+}
+
+.error-icon > svg {
+  height: var(--ic-space-md);
+  width: var(--ic-space-md);
+  fill: var(--ic-status-error);
+}
+
+.loading-error-info {
+  display: flex;
 }
 
 .check-icon {

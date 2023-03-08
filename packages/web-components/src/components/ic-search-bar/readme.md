@@ -88,7 +88,9 @@ graph TD;
   ic-button --> ic-tooltip
   ic-loading-indicator --> ic-typography
   ic-tooltip --> ic-typography
+  ic-menu --> ic-loading-indicator
   ic-menu --> ic-typography
+  ic-menu --> ic-button
   style ic-search-bar fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

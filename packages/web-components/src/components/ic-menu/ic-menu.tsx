@@ -9,10 +9,16 @@ import {
   Method,
   State,
   Watch,
+  Fragment,
 } from "@stencil/core";
 import { createPopper, Instance as PopperInstance } from "@popperjs/core";
+import errorIcon from "../../assets/error-icon.svg";
 
-import { IcActivationTypes, IcMenuOption } from "../../utils/types";
+import {
+  IcActivationTypes,
+  IcMenuOption,
+  IcValueEventDetail,
+} from "../../utils/types";
 import Check from "../../assets/check-icon.svg";
 import { onComponentRequiredPropUndefined } from "../../utils/helpers";
 import {
@@ -26,6 +32,7 @@ import {
   styleUrl: "ic-menu.css",
   shadow: true,
 })
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class Menu {
   @Element() host: HTMLIcMenuElement;
 
@@ -120,6 +127,11 @@ export class Menu {
    * @internal Emitted when key is pressed while menu is open
    */
   @Event() menuKeyPress: EventEmitter<{ isNavKey: boolean }>;
+
+  /**
+   * @internal Emitted when the retry button is clicked
+   */
+  @Event() retryButtonClicked: EventEmitter<IcValueEventDetail>;
 
   private handleClearListener = (): void => {
     this.optionHighlighted = "";
@@ -358,6 +370,10 @@ export class Menu {
     const { value, label } = (event.target as HTMLLIElement).dataset;
     this.menuOptionSelect.emit({ value, label });
     this.handleMenuChange(false);
+  };
+
+  private handleRetry = (): void => {
+    this.retryButtonClicked.emit({ value: this.options[0].value });
   };
 
   private handleBlur = (event: FocusEvent): void => {
@@ -617,6 +633,32 @@ export class Menu {
     );
   }
 
+  private optionContent = (option: IcMenuOption) => {
+    return (
+      <Fragment>
+        {option.loading && <ic-loading-indicator size="icon" />}
+        <div class="option-text-container">
+          <ic-typography variant="body" aria-hidden="true">
+            <p>{option.label}</p>
+          </ic-typography>
+          {option.description && (
+            <ic-typography
+              id={`${this.getOptionId(option.value)}-description`}
+              class="option-description"
+              variant="caption"
+              aria-hidden="true"
+            >
+              <p>{option.description}</p>
+            </ic-typography>
+          )}
+        </div>
+        {option.value === this.value &&
+          this.parentEl.tagName !== "IC-SEARCH-BAR" &&
+          option.value !== "" && <span class="check-icon" innerHTML={Check} />}
+      </Fragment>
+    );
+  };
+
   private displayOption = (
     option: IcMenuOption,
     index?: number,
@@ -638,6 +680,8 @@ export class Menu {
             this.options[index + 1] &&
             !this.options[index + 1].recommended,
           "disabled-option": option.disabled,
+          "loading-option": option.loading && !option.timedOut,
+          timeout: option.timedOut,
         }}
         role="option"
         tabindex={
@@ -650,31 +694,29 @@ export class Menu {
         aria-label={this.getOptionAriaLabel(option, parentOption)}
         aria-selected={option.value === value}
         aria-disabled={option.disabled ? "true" : "false"}
-        onClick={this.handleOptionClick}
+        onClick={!option.timedOut && this.handleOptionClick}
         onBlur={this.handleBlur}
         onMouseDown={this.handleMouseDown}
         data-value={option.value}
         data-label={option.label}
       >
-        <div class="option-text-container">
-          <ic-typography variant="body" aria-hidden="true">
-            <p>{option.label}</p>
-          </ic-typography>
-          {option.description && (
-            <ic-typography
-              id={`${this.getOptionId(option.value)}-description`}
-              class="option-description"
-              variant="caption"
-              aria-hidden="true"
+        {option.timedOut ? (
+          <Fragment>
+            <div class="loading-error-info">
+              <span class="error-icon" innerHTML={errorIcon}></span>
+              <ic-typography variant="label">{option.label}</ic-typography>
+            </div>
+            <ic-button
+              size="small"
+              variant="tertiary"
+              onClick={this.handleRetry}
             >
-              <p>{option.description}</p>
-            </ic-typography>
-          )}
-        </div>
-        {option.value === value &&
-          this.parentEl.tagName !== "IC-SEARCH-BAR" && (
-            <span class="check-icon" innerHTML={Check} />
-          )}
+              Retry
+            </ic-button>
+          </Fragment>
+        ) : (
+          this.optionContent(option)
+        )}
       </li>
     );
   };

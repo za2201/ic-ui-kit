@@ -43,6 +43,7 @@ let inputIds = 0;
   styleUrl: "ic-select.css",
   shadow: true,
 })
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class Select {
   private nativeSelectElement: HTMLSelectElement;
   private customSelectElement: HTMLButtonElement;
@@ -57,6 +58,8 @@ export class Select {
   private inheritedAttributes: { [k: string]: unknown } = {};
 
   private debounceAria: number;
+
+  private timeoutTimer: number;
 
   /**
    * The label for the select.
@@ -173,6 +176,11 @@ export class Select {
    */
   @Prop() disableFilter?: boolean = false;
 
+  /**
+   * If using external filtering, set a timeout for when loading takes too long.
+   */
+  @Prop() timeout: number = null;
+
   @State() open: boolean = false;
 
   @State() clearButtonFocused: boolean = false;
@@ -193,20 +201,23 @@ export class Select {
 
   @Watch("options")
   watchOptionsHandler(): void {
-    if (this.isExternalFiltering()) {
-      if (this.options.length > 0) {
+    if (!this.filteredOptions.some((option) => option.timedOut)) {
+      if (this.isExternalFiltering()) {
+        clearTimeout(this.timeoutTimer);
+        if (this.options.length > 0) {
+          this.setOptionsValuesFromLabels();
+          this.noOptions = null;
+          this.filteredOptions = this.options;
+        } else if (this.isMenuEnabled()) {
+          this.noOptions = [{ label: this.emptyOptionListText, value: "" }];
+          this.filteredOptions = this.noOptions;
+          this.setMenuChange(true);
+        }
+        this.updateSearchableSelectResultAriaLive();
+      } else {
         this.setOptionsValuesFromLabels();
-        this.noOptions = null;
         this.filteredOptions = this.options;
-      } else if (this.isMenuEnabled()) {
-        this.noOptions = [{ label: this.emptyOptionListText, value: "" }];
-        this.filteredOptions = this.noOptions;
-        this.setMenuChange(true);
       }
-      this.updateSearchableSelectResultAriaLive();
-    } else {
-      this.setOptionsValuesFromLabels();
-      this.filteredOptions = this.options;
     }
   }
 
@@ -245,6 +256,11 @@ export class Select {
    */
   @Event() icInput: EventEmitter<IcValueEventDetail>;
 
+  /**
+   * Emitted when asyncronous loading is retried
+   */
+  @Event() icRetryLoad: EventEmitter<IcValueEventDetail>;
+
   @Element() host!: HTMLIcSelectElement;
 
   /**
@@ -260,6 +276,11 @@ export class Select {
       this.searchableSelectElement.focus();
     }
   }
+
+  private handleRetry = (ev: CustomEvent) => {
+    this.icRetryLoad.emit({ value: ev.detail.value });
+    this.triggerLoading();
+  };
 
   private updateOnChangeDebounce(newValue: number) {
     if (this.currDebounce !== newValue) {
@@ -468,12 +489,29 @@ export class Select {
     this.clearButtonFocused = false;
   };
 
+  private triggerLoading = () => {
+    this.noOptions = [{ label: "Loading...", value: "", loading: true }];
+    if (this.filteredOptions !== this.noOptions)
+      this.filteredOptions = this.noOptions;
+    this.timeoutTimer = window.setTimeout(() => {
+      this.noOptions = [
+        { label: "Loading Error", value: this.value, timedOut: true },
+      ];
+      this.filteredOptions = this.noOptions;
+    }, this.timeout);
+  };
+
   private handleSearchableSelectInput = (event: Event): void => {
     this.searchableSelectInputValue = (event.target as HTMLInputElement).value;
     this.icInput.emit({ value: this.searchableSelectInputValue });
 
     if (this.disableFilter) {
       this.emitIcChange(this.searchableSelectInputValue);
+      if (
+        this.searchableSelectInputValue.length >=
+        this.charactersUntilSuggestions
+      )
+        this.triggerLoading();
     } else if (
       this.getValueFromLabel(this.searchableSelectInputValue) === undefined
     ) {
@@ -878,6 +916,7 @@ export class Select {
               onMenuStateChange={this.handleMenuChange}
               onMenuOptionSelect={this.handleCustomSelectChange}
               onMenuKeyPress={this.handleMenuKeyPress}
+              onRetryButtonClicked={this.handleRetry}
               parentEl={this.host}
             ></ic-menu>
           )}

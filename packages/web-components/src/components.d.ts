@@ -7,7 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { IcAlertVariants } from "./components/ic-alert/ic-alert.types";
 import { IcButtonSizes, IcButtonTooltipPlacement, IcButtonTypes, IcButtonVariants } from "./components/ic-button/ic-button.types";
-import { IcActivationTypes, IcAdditionalFieldTypes, IcAlignment, IcAutocompleteTypes, IcAutocorrectStates, IcInformationStatusOrEmpty, IcMenuOption, IcOrientation, IcSearchMatchPositions, IcTheme, IcThemeForeground, IcThemeForegroundNoDefault, IcTypographyVariants } from "./utils/types";
+import { IcActivationTypes, IcAdditionalFieldTypes, IcAlignment, IcAutocompleteTypes, IcAutocorrectStates, IcInformationStatusOrEmpty, IcMenuOption, IcOrientation, IcSearchMatchPositions, IcTheme, IcThemeForeground, IcThemeForegroundNoDefault, IcTypographyVariants, IcValueEventDetail } from "./utils/types";
 import { IcChangeEventDetail } from "./components/ic-checkbox-group/ic-checkbox-group.types";
 import { IcChipAppearance, IcChipSizes } from "./components/ic-chip/ic-chip.types";
 import { IcProtectiveMarkings } from "./components/ic-classification-banner/ic-classification-banner.types";
@@ -16,7 +16,7 @@ import { IcHeroContentAlignments } from "./components/ic-hero/ic-hero.types";
 import { IcAriaLiveModeVariants } from "./components/ic-input-validation/ic-input-validation.types";
 import { IcLoadingSizes, IcLoadingTypes } from "./components/ic-loading-indicator/ic-loading-indicator.types";
 import { IcMenuChangeEventDetail, IcMenuOptionIdEventDetail, IcOptionSelectEventDetail } from "./components/ic-menu/ic-menu.types";
-import { IcAutocompleteTypes as IcAutocompleteTypes1, IcAutocorrectStates as IcAutocorrectStates1, IcBlurEventDetail, IcInformationStatusOrEmpty as IcInformationStatusOrEmpty1, IcValueEventDetail } from "./interface";
+import { IcAutocompleteTypes as IcAutocompleteTypes1, IcAutocorrectStates as IcAutocorrectStates1, IcBlurEventDetail, IcInformationStatusOrEmpty as IcInformationStatusOrEmpty1, IcValueEventDetail as IcValueEventDetail1 } from "./interface";
 import { IcSearchBarBlurEventDetail } from "./components/ic-search-bar/ic-search-bar.types";
 import { IcSkeletonVariants } from "./components/ic-skeleton/ic-skeleton.types";
 import { IcStatusTagAppearance, IcStatusTagStatuses } from "./components/ic-status-tag/ic-status-tag.types";
@@ -1057,6 +1057,10 @@ export namespace Components {
           * If `true`, the small styling will be applied to the select.
          */
         "small"?: boolean;
+        /**
+          * If using external filtering, set a timeout for when loading takes too long.
+         */
+        "timeout": number;
         /**
           * The validation status - e.g. 'error' | 'warning' | 'success'.
          */
@@ -2519,6 +2523,7 @@ declare namespace LocalJSX {
         "onMenuOptionId"?: (event: IcMenuCustomEvent<IcMenuOptionIdEventDetail>) => void;
         "onMenuOptionSelect"?: (event: IcMenuCustomEvent<IcOptionSelectEventDetail>) => void;
         "onMenuStateChange"?: (event: IcMenuCustomEvent<IcMenuChangeEventDetail>) => void;
+        "onRetryButtonClicked"?: (event: IcMenuCustomEvent<IcValueEventDetail>) => void;
         /**
           * If `true`, the menu will be displayed open.
          */
@@ -2665,7 +2670,7 @@ declare namespace LocalJSX {
         /**
           * Emitted when a user selects a radio.
          */
-        "onIcChange"?: (event: IcRadioGroupCustomEvent<IcValueEventDetail>) => void;
+        "onIcChange"?: (event: IcRadioGroupCustomEvent<IcValueEventDetail1>) => void;
         /**
           * The orientation of the radio buttons in the radio group. If there are more than two radio buttons in a radio group or either of the radio buttons use the `additional-field` slot, then the orientation will always be vertical.
          */
@@ -2715,11 +2720,11 @@ declare namespace LocalJSX {
         /**
           * Emitted when a radio is selected.
          */
-        "onIcCheck"?: (event: IcRadioOptionCustomEvent<IcValueEventDetail>) => void;
+        "onIcCheck"?: (event: IcRadioOptionCustomEvent<IcValueEventDetail1>) => void;
         /**
           * @deprecated This event should not be used anymore. Use icCheck instead.
          */
-        "onRadioOptionSelect"?: (event: IcRadioOptionCustomEvent<IcValueEventDetail>) => void;
+        "onRadioOptionSelect"?: (event: IcRadioOptionCustomEvent<IcValueEventDetail1>) => void;
         /**
           * If `true`, the radio option will be displayed in a selected state.
          */
@@ -2797,7 +2802,7 @@ declare namespace LocalJSX {
         /**
           * Emitted when the value has changed.
          */
-        "onIcChange"?: (event: IcSearchBarCustomEvent<IcValueEventDetail>) => void;
+        "onIcChange"?: (event: IcSearchBarCustomEvent<IcValueEventDetail1>) => void;
         /**
           * Emitted when value is cleared with clear button
          */
@@ -2806,7 +2811,7 @@ declare namespace LocalJSX {
         /**
           * Emitted when a keyboard input occurred.
          */
-        "onIcInput"?: (event: IcSearchBarCustomEvent<IcValueEventDetail>) => void;
+        "onIcInput"?: (event: IcSearchBarCustomEvent<IcValueEventDetail1>) => void;
         /**
           * @deprecated This event should not be used anymore. Use icSearchBarBlur instead.
          */
@@ -2814,7 +2819,7 @@ declare namespace LocalJSX {
         /**
           * @deprecated This event should not be used anymore. Use icSearchBarFocus instead.
          */
-        "onIcInputFocus"?: (event: IcSearchBarCustomEvent<IcValueEventDetail>) => void;
+        "onIcInputFocus"?: (event: IcSearchBarCustomEvent<IcValueEventDetail1>) => void;
         /**
           * Emitted when the state of the menu changes (i.e. open or close)
          */
@@ -2834,7 +2839,7 @@ declare namespace LocalJSX {
         /**
           * Emitted when the search value has been submitted
          */
-        "onIcSubmitSearch"?: (event: IcSearchBarCustomEvent<IcValueEventDetail>) => void;
+        "onIcSubmitSearch"?: (event: IcSearchBarCustomEvent<IcValueEventDetail1>) => void;
         "onIcSubmitSearchBlur"?: (event: IcSearchBarCustomEvent<IcBlurEventDetail>) => void;
         /**
           * The suggested search options.
@@ -2931,7 +2936,7 @@ declare namespace LocalJSX {
         /**
           * Emitted when the value changes.
          */
-        "onIcChange"?: (event: IcSelectCustomEvent<IcValueEventDetail>) => void;
+        "onIcChange"?: (event: IcSelectCustomEvent<IcValueEventDetail1>) => void;
         /**
           * Emitted when clear button clicked.
          */
@@ -2943,11 +2948,15 @@ declare namespace LocalJSX {
         /**
           * Emitted when a keyboard input occurred.
          */
-        "onIcInput"?: (event: IcSelectCustomEvent<IcValueEventDetail>) => void;
+        "onIcInput"?: (event: IcSelectCustomEvent<IcValueEventDetail1>) => void;
         /**
           * Emitted when option is highlighted within the menu.
          */
         "onIcOptionSelect"?: (event: IcSelectCustomEvent<IcOptionSelectEventDetail>) => void;
+        /**
+          * Emitted when asyncronous loading is retried
+         */
+        "onIcRetryLoad"?: (event: IcSelectCustomEvent<IcValueEventDetail1>) => void;
         /**
           * The possible selection options.
          */
@@ -2980,6 +2989,10 @@ declare namespace LocalJSX {
           * If `true`, the small styling will be applied to the select.
          */
         "small"?: boolean;
+        /**
+          * If using external filtering, set a timeout for when loading takes too long.
+         */
+        "timeout"?: number;
         /**
           * The validation status - e.g. 'error' | 'warning' | 'success'.
          */
@@ -3283,19 +3296,19 @@ declare namespace LocalJSX {
         /**
           * Emitted when input loses focus.
          */
-        "onIcBlur"?: (event: IcTextFieldCustomEvent<IcValueEventDetail>) => void;
+        "onIcBlur"?: (event: IcTextFieldCustomEvent<IcValueEventDetail1>) => void;
         /**
           * Emitted when the value has changed.
          */
-        "onIcChange"?: (event: IcTextFieldCustomEvent<IcValueEventDetail>) => void;
+        "onIcChange"?: (event: IcTextFieldCustomEvent<IcValueEventDetail1>) => void;
         /**
           * Emitted when input gains focus.
          */
-        "onIcFocus"?: (event: IcTextFieldCustomEvent<IcValueEventDetail>) => void;
+        "onIcFocus"?: (event: IcTextFieldCustomEvent<IcValueEventDetail1>) => void;
         /**
           * Emitted when a keyboard input occurred.
          */
-        "onIcInput"?: (event: IcTextFieldCustomEvent<IcValueEventDetail>) => void;
+        "onIcInput"?: (event: IcTextFieldCustomEvent<IcValueEventDetail1>) => void;
         /**
           * Emitted when a keydown event occurred.
          */

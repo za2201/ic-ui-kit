@@ -124,6 +124,8 @@ export interface IcMenuOption {
   disabled?: boolean;
   recommended?: boolean;
   children?: IcMenuOption[];
+  loading?: boolean;
+  timedOut?: boolean;
 }
 
 export type IcSearchMatchPositions = "start" | "anywhere";
