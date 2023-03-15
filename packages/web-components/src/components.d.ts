@@ -840,6 +840,28 @@ export namespace Components {
          */
         "subheading"?: string;
     }
+    interface IcPopoverMenu {
+        /**
+          * The ID of the element the popover menu will anchor itself to. This is required unless the popover is a submenu.
+         */
+        "anchor": string;
+        /**
+          * The aria label for each popover menu/submenu.
+         */
+        "menuAriaLabel": string;
+        /**
+          * If `true`, the popover menu will be displayed.
+         */
+        "open": boolean;
+        "openFromChild": () => Promise<void>;
+        "openFromParent": () => Promise<void>;
+        "parentLabel"?: string;
+        "parentPopover"?: HTMLIcPopoverMenuElement;
+        /**
+          * The unique identifier for a popover submenu.
+         */
+        "submenuId"?: string;
+    }
     interface IcRadioGroup {
         /**
           * If `true`, the disabled state will be set.
@@ -1834,6 +1856,12 @@ declare global {
         prototype: HTMLIcPageHeaderElement;
         new (): HTMLIcPageHeaderElement;
     };
+    interface HTMLIcPopoverMenuElement extends Components.IcPopoverMenu, HTMLStencilElement {
+    }
+    var HTMLIcPopoverMenuElement: {
+        prototype: HTMLIcPopoverMenuElement;
+        new (): HTMLIcPopoverMenuElement;
+    };
     interface HTMLIcRadioGroupElement extends Components.IcRadioGroup, HTMLStencilElement {
     }
     var HTMLIcRadioGroupElement: {
@@ -1999,6 +2027,7 @@ declare global {
         "ic-navigation-item": HTMLIcNavigationItemElement;
         "ic-navigation-menu": HTMLIcNavigationMenuElement;
         "ic-page-header": HTMLIcPageHeaderElement;
+        "ic-popover-menu": HTMLIcPopoverMenuElement;
         "ic-radio-group": HTMLIcRadioGroupElement;
         "ic-radio-option": HTMLIcRadioOptionElement;
         "ic-search-bar": HTMLIcSearchBarElement;
@@ -2842,6 +2871,26 @@ declare namespace LocalJSX {
          */
         "subheading"?: string;
     }
+    interface IcPopoverMenu {
+        /**
+          * The ID of the element the popover menu will anchor itself to. This is required unless the popover is a submenu.
+         */
+        "anchor"?: string;
+        /**
+          * The aria label for each popover menu/submenu.
+         */
+        "menuAriaLabel": string;
+        /**
+          * If `true`, the popover menu will be displayed.
+         */
+        "open"?: boolean;
+        "parentLabel"?: string;
+        "parentPopover"?: HTMLIcPopoverMenuElement;
+        /**
+          * The unique identifier for a popover submenu.
+         */
+        "submenuId"?: string;
+    }
     interface IcRadioGroup {
         /**
           * If `true`, the disabled state will be set.
@@ -3684,6 +3733,7 @@ declare namespace LocalJSX {
         "ic-navigation-item": IcNavigationItem;
         "ic-navigation-menu": IcNavigationMenu;
         "ic-page-header": IcPageHeader;
+        "ic-popover-menu": IcPopoverMenu;
         "ic-radio-group": IcRadioGroup;
         "ic-radio-option": IcRadioOption;
         "ic-search-bar": IcSearchBar;
@@ -3744,6 +3794,7 @@ declare module "@stencil/core" {
             "ic-navigation-item": LocalJSX.IcNavigationItem & JSXBase.HTMLAttributes<HTMLIcNavigationItemElement>;
             "ic-navigation-menu": LocalJSX.IcNavigationMenu & JSXBase.HTMLAttributes<HTMLIcNavigationMenuElement>;
             "ic-page-header": LocalJSX.IcPageHeader & JSXBase.HTMLAttributes<HTMLIcPageHeaderElement>;
+            "ic-popover-menu": LocalJSX.IcPopoverMenu & JSXBase.HTMLAttributes<HTMLIcPopoverMenuElement>;
             "ic-radio-group": LocalJSX.IcRadioGroup & JSXBase.HTMLAttributes<HTMLIcRadioGroupElement>;
             "ic-radio-option": LocalJSX.IcRadioOption & JSXBase.HTMLAttributes<HTMLIcRadioOptionElement>;
             "ic-search-bar": LocalJSX.IcSearchBar & JSXBase.HTMLAttributes<HTMLIcSearchBarElement>;
