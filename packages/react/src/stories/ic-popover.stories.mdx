@@ -1,0 +1,83 @@
+import {
+  Meta,
+  Story,
+  Canvas,
+  ArgsTable,
+  Description,
+} from "@storybook/addon-docs";
+import { IcPopoverMenu, IcMenuButton, IcButton } from "../components";
+import readme from "../../../web-components/src/components/ic-popover-menu/readme.md";
+
+<Meta title="React Components/Popover" component={IcPopoverMenu} />
+
+<Description markdown={readme} />
+
+### Default
+
+<Canvas>
+  <Story name="Default">
+    {() => {
+        function buttonClick() {
+            document.querySelector("ic-popover-menu").open = true
+        }
+        return (
+            <>
+                <IcButton id="button-1" onClick={buttonClick}>Show popover</IcButton>
+                <IcPopoverMenu anchor="button-1" menuAriaLabel="popover">
+                    <IcMenuButton label="Button 1" />
+                    <IcMenuButton label="Button 2" />
+                    <IcMenuButton label="Button 3" />
+                </IcPopoverMenu>
+            </>
+        );
+    }}
+  </Story>
+</Canvas>
+
+### Left placement
+
+<Canvas>
+  <Story name="Left placement">
+    {() => {
+        function buttonClick() {
+            document.querySelector("ic-popover-menu").open = true
+        }
+        return (
+            <>
+                <div  style={{marginLeft: "1000px"}}>
+                    <IcButton id="button-1" onClick={buttonClick}>Show popover</IcButton>
+                    <IcPopoverMenu anchor="button-1" menuAriaLabel="popover">
+                    <IcMenuButton label="Button 1" />
+                    <IcMenuButton label="Button 2" />
+                    <IcMenuButton label="Button 3" />
+                </IcPopoverMenu>
+                </div>
+            </>
+        );
+    }}  
+  </Story>
+</Canvas>
+
+### Top placement
+
+<Canvas>
+  <Story name="Top placement">
+    {() => {
+        function buttonClick() {
+            document.querySelector("ic-popover-menu").open = true
+        }
+        return (
+            <>
+                <div  style={{marginTop: "540px"}}>
+                    <IcButton id="button-1" onClick={buttonClick}>Show popover</IcButton>
+                    <IcPopoverMenu anchor="button-1" menuAriaLabel="popover">
+                    <IcMenuButton label="Button 1" />
+                    <IcMenuButton label="Button 2" />
+                    <IcMenuButton label="Button 3" />
+                </IcPopoverMenu>
+                </div>
+            </>
+        );
+    }}
+  </Story>
+</Canvas>
