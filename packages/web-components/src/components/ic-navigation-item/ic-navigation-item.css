@@ -121,12 +121,14 @@ ic-typography {
 :host(.navigation-item-side-menu) ::slotted(a) {
   height: 2.5rem;
   width: 100%;
+  box-sizing: border-box;
   color: var(--ic-color-primary-text);
   display: flex;
   align-items: center;
   justify-content: flex-start;
   text-decoration: none;
-  transition: var(--ic-transition-duration-fast);
+  transition: box-shadow var(--ic-transition-duration-fast),
+    border-radius var(--ic-transition-duration-fast);
 }
 
 :host(.navigation-item-side-menu) ::slotted(a) {
@@ -245,6 +247,7 @@ ic-typography {
   left: 0;
   width: var(--ic-space-xs);
   height: 2.5rem;
+  margin-top: 0.25rem;
   margin-right: 0.313rem;
   background-color: var(--ic-action-default);
   transition: left 0s;
@@ -534,4 +537,24 @@ ic-typography {
 :host(.navigation-item-page-header.navigation-item-selected)
   .link:focus::before {
   display: none;
+}
+
+:host(.navigation-item-page-header) svg,
+:host(.navigation-item-top-nav-child) svg,
+:host(.navigation-item-side-menu) svg {
+  fill: var(--ic-color-primary-text);
+}
+
+.open-in-new-icon {
+  margin-top: 4px;
+}
+
+:host(.navigation-item-page-header) .open-in-new-icon,
+:host(.navigation-item-top-nav) .open-in-new-icon {
+  margin-right: -4px;
+}
+
+:host(.navigation-item-side-menu) .link:focus .open-in-new-icon {
+  margin-left: 8px;
+  margin-right: -8px;
 }

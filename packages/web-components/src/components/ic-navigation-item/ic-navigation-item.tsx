@@ -22,6 +22,8 @@ import { IcNavType, IcTheme } from "../../utils/types";
 
 import chevronIcon from "../../assets/chevron-icon.svg";
 
+import OpenInNew from "../ic-link/assets/OpenInNew.svg";
+
 /**
  * @part link - The `<a>` within ic-navigation-item
  */
@@ -45,6 +47,26 @@ export class NavigationItem {
    * The destination of the navigation item.
    */
   @Prop() href: string = "";
+
+  /**
+   *  The place to display the linked URL, as the name for a browsing context (a tab, window, or iframe).
+   */
+  @Prop() target?: string;
+
+  /**
+   * The relationship of the linked URL as space-separated link types.
+   */
+  @Prop() rel?: string;
+
+  /**
+   * The human language of the linked URL.
+   */
+  @Prop() hreflang?: string;
+
+  /**
+   * How much of the referrer to send when following the link.
+   */
+  @Prop() referrerpolicy?: ReferrerPolicy;
 
   /**
    *  If `true`, the navigation item will be set in a selected state.
@@ -187,6 +209,10 @@ export class NavigationItem {
 
   private displayDefaultNavigationItem = (
     href: string,
+    hreflang: string,
+    target: string,
+    rel: string,
+    referrerpolicy: ReferrerPolicy,
     label: string
   ): HTMLElement => {
     const variant =
@@ -206,6 +232,10 @@ export class NavigationItem {
       return (
         <a
           href={href}
+          target={target}
+          rel={rel}
+          hreflang={hreflang}
+          referrerPolicy={referrerpolicy}
           class="link"
           ref={(el) => (this.itemEl = el)}
           part="link"
@@ -215,6 +245,9 @@ export class NavigationItem {
 
           <ic-typography variant={variant}>{label}</ic-typography>
           {ChevronIconComponent}
+          {target === "_blank" && (
+            <span class="open-in-new-icon" innerHTML={OpenInNew} />
+          )}
         </a>
       );
     }
@@ -236,6 +269,10 @@ export class NavigationItem {
   render() {
     const {
       href,
+      hreflang,
+      target,
+      rel,
+      referrerpolicy,
       label,
       inTopNavSideMenu,
       isTopNavChild,
@@ -293,7 +330,14 @@ export class NavigationItem {
           {navigationSlot ? (
             <slot name="navigation-item"></slot>
           ) : (
-            this.displayDefaultNavigationItem(href, label)
+            this.displayDefaultNavigationItem(
+              href,
+              hreflang,
+              target,
+              rel,
+              referrerpolicy,
+              label
+            )
           )}
         </ic-tooltip>
       </Host>
