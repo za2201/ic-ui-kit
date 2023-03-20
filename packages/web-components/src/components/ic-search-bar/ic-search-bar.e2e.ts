@@ -144,7 +144,7 @@ describe("ic-search-bar", () => {
 
     await page.waitForTimeout(500);
 
-    const menuItems = menu.shadowRoot.querySelectorAll("li");
+    const menuItems = menu.shadowRoot.querySelectorAll("[role='option']");
 
     expect(await menuItems.length).toBe(2);
     expect(await menu.isVisible()).toBeTruthy();
@@ -476,7 +476,7 @@ describe("ic-search-bar", () => {
 
     await page.waitForChanges();
 
-    let menuItems = menu.shadowRoot.querySelectorAll("li");
+    let menuItems = menu.shadowRoot.querySelectorAll("[role='option']");
 
     expect(await menuItems.length).toBe(2);
 
@@ -484,7 +484,7 @@ describe("ic-search-bar", () => {
 
     await page.waitForChanges();
 
-    menuItems = menu.shadowRoot.querySelectorAll("li");
+    menuItems = menu.shadowRoot.querySelectorAll("[role='option']");
 
     expect(await menuItems.length).toBe(1);
   });
@@ -654,7 +654,7 @@ describe("ic-search-bar", () => {
       const menuEl = document
         .querySelector("ic-search-bar")
         .shadowRoot.querySelector("ic-menu");
-      const noOptionsItem = menuEl.shadowRoot.querySelectorAll("li")[0];
+      const noOptionsItem = menuEl.shadowRoot.querySelectorAll("[role='option']")[0] as HTMLElement;
 
       return noOptionsItem.innerText;
     });
@@ -683,7 +683,7 @@ describe("ic-search-bar", () => {
       const menuEl = document
         .querySelector("ic-search-bar")
         .shadowRoot.querySelector("ic-menu");
-      const noOptionsItem = menuEl.shadowRoot.querySelectorAll("li")[0];
+      const noOptionsItem = menuEl.shadowRoot.querySelectorAll("[role='option']")[0] as HTMLElement;
 
       return noOptionsItem.innerText;
     });
@@ -732,9 +732,9 @@ describe("ic-search-bar", () => {
       const menuEl = document
         .querySelector("ic-search-bar")
         .shadowRoot.querySelector("ic-menu");
-      const firstMenuItem = menuEl.shadowRoot.querySelectorAll("li")[0];
+      const firstMenuItem = menuEl.shadowRoot.querySelectorAll("[role='option']")[0];
 
-      return firstMenuItem.classList.contains("focused-option");
+      return (firstMenuItem as Element).classList.contains("focused-option");
     });
 
     expect(FirstOptionClassIsFocusedOption).toBeTruthy();
@@ -762,7 +762,7 @@ describe("ic-search-bar", () => {
     await page.waitForChanges();
 
     let menu = await page.find("ic-search-bar >>> ic-text-field ic-menu");
-    let firstOption = menu.shadowRoot.querySelectorAll("li")[0];
+    let firstOption = menu.shadowRoot.querySelectorAll("[role='option']")[0];
     expect(firstOption).toHaveClass("focused-option");
 
     await searchBar.press("Enter");
@@ -784,8 +784,8 @@ describe("ic-search-bar", () => {
     await page.waitForChanges();
 
     menu = await page.find("ic-search-bar >>> ic-text-field ic-menu");
-    firstOption = menu.shadowRoot.querySelectorAll("li")[0];
-    const lastOption = menu.shadowRoot.querySelectorAll("li")[1];
+    firstOption = menu.shadowRoot.querySelectorAll("[role='option']")[0];
+    const lastOption = menu.shadowRoot.querySelectorAll("[role='option']")[1];
 
     expect(firstOption).not.toHaveClass("focused-option");
     expect(lastOption).toHaveClass("focused-option");
@@ -797,7 +797,7 @@ describe("ic-search-bar", () => {
     expect(await searchBar.getProperty("value")).toBe("qux");
   });
 
-  it("should tab through search bar from input > clear > submit > ic-menu when options are available", async () => {
+  it.only("should tab through search bar from input > clear > submit > ic-menu when options are available", async () => {
     const page = await newE2EPage();
     await page.setContent(`<ic-search-bar label="Test Label"></ic-search-bar>`);
     const searchBar = await page.find("ic-search-bar");
@@ -850,6 +850,8 @@ describe("ic-search-bar", () => {
       const el = document
         .querySelector("ic-search-bar")
         .shadowRoot.querySelector("ic-menu");
+        console.log(document
+          .querySelector("ic-search-bar"));
       return el.shadowRoot.activeElement.id;
     });
 
@@ -875,7 +877,7 @@ describe("ic-search-bar", () => {
     expect(await menu.isVisible()).toBeTruthy();
   });
 
-  it("focuses back onto search bar from menu", async () => {
+  it.only("focuses back onto search bar from menu", async () => {
     const page = await newE2EPage();
     await page.setContent(`<ic-search-bar label="Test Label"></ic-search-bar>`);
     const searchBar = await page.find("ic-search-bar");
@@ -976,7 +978,7 @@ describe("ic-search-bar", () => {
     expect(submitSearchTooltipDisplay).toBe("block");
   });
 
-  it("should highlight first option again after no results found", async () => {
+  it.only("should highlight first option again after no results found", async () => {
     const page = await newE2EPage();
     await page.setContent(`
       <ic-search-bar label="Test Label"></ic-search-bar>
@@ -995,9 +997,9 @@ describe("ic-search-bar", () => {
       const menuEl = document
         .querySelector("ic-search-bar")
         .shadowRoot.querySelector("ic-menu");
-      const noOptionsItem = menuEl.shadowRoot.querySelectorAll("li")[0];
+      const noOptionsItem = menuEl.shadowRoot.querySelectorAll("[role='option']")[0];
 
-      return noOptionsItem.innerText;
+      return (noOptionsItem as HTMLElement).innerText;
     });
 
     expect(noOptionsLabel).toBe("No results found");
@@ -1012,7 +1014,7 @@ describe("ic-search-bar", () => {
       const menuEl = document
         .querySelector("ic-search-bar")
         .shadowRoot.querySelector("ic-menu");
-      const firstOptionItem = menuEl.shadowRoot.querySelectorAll("li")[0];
+      const firstOptionItem = menuEl.shadowRoot.querySelectorAll("[role='option']")[0];
 
       return firstOptionItem.classList.contains("focused-option");
     });

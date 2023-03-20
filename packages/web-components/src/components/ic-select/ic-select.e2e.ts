@@ -192,7 +192,7 @@ describe("ic-select", () => {
             </div>
           </div>
         </ic-input-component-container>
-        <ic-menu class="hydrated"></ic-menu>
+        <ic-menu aria-activedescendant="" aria-label="IC Select Test" class="hydrated menu" id="ic-select-input-0-menu" role="listbox" tabindex="0"></ic-menu>
       </div>
     </ic-input-container>
       `);
@@ -237,7 +237,7 @@ describe("ic-select", () => {
             </div>
           </div>
         </ic-input-component-container>
-        <ic-menu class="hydrated"></ic-menu>
+        <ic-menu aria-activedescendant="" aria-label="IC Select Test" class="hydrated menu" id="ic-select-input-0-menu" role="listbox" tabindex="0"></ic-menu>
       </div>
     </ic-input-container>
       `);
@@ -251,8 +251,7 @@ describe("ic-select", () => {
       const menuVisibility = await page.evaluate(() => {
         const menu = document
           .querySelector("ic-select")
-          .shadowRoot.querySelector("ic-menu")
-          .shadowRoot.querySelector("#ic-select-input-0-menu");
+          .shadowRoot.querySelector("ic-menu");
         return window.getComputedStyle(menu).visibility;
       });
       expect(menuVisibility).toBe("hidden");
@@ -264,8 +263,7 @@ describe("ic-select", () => {
       const newMenuVisibility = await page.evaluate(() => {
         const menu = document
           .querySelector("ic-select")
-          .shadowRoot.querySelector("ic-menu")
-          .shadowRoot.querySelector("#ic-select-input-0-menu");
+          .shadowRoot.querySelector("ic-menu");
         return window.getComputedStyle(menu).visibility;
       });
       expect(newMenuVisibility).toBe("visible");
@@ -274,7 +272,7 @@ describe("ic-select", () => {
       const activeElId = await page.$eval(
         "ic-select",
         (el) =>
-          el.shadowRoot.querySelector("ic-menu").shadowRoot.activeElement.id
+          el.shadowRoot.activeElement.id
       );
       expect(activeElId).toBe("ic-select-input-0-menu");
     });
@@ -291,7 +289,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const menuOptions = await menu.shadowRoot.querySelectorAll("li");
+      const menuOptions = await menu.shadowRoot.querySelectorAll("[role='option']");
       expect(menuOptions).toHaveLength(3);
       expect(menuOptions[0]).toEqualText("Test label 1");
       expect(menuOptions[1]).toEqualText("Test label 2");
@@ -329,7 +327,7 @@ describe("ic-select", () => {
         );
         expect(await getMenuVisibility(page)).toBe("visible");
 
-        const firstOption = await menu.shadowRoot.querySelectorAll("li")[0];
+        const firstOption = await menu.shadowRoot.querySelectorAll("[role='option']")[0];
         expect(firstOption).toHaveClass("focused-option");
         expect(select).toEqualText("Test label 1");
       });
@@ -373,7 +371,7 @@ describe("ic-select", () => {
         );
         expect(await getMenuVisibility(page)).toBe("visible");
 
-        const lastOption = await menu.shadowRoot.querySelectorAll("li")[2];
+        const lastOption = await menu.shadowRoot.querySelectorAll("[role='option']")[2];
         expect(lastOption).toHaveClass("focused-option");
         expect(select).toEqualText("Test label 3");
       });
@@ -393,7 +391,7 @@ describe("ic-select", () => {
         const menu = await page.find(
           "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
         );
-        const secondOption = await menu.shadowRoot.querySelectorAll("li")[1];
+        const secondOption = await menu.shadowRoot.querySelectorAll("[role='option']")[1];
         expect(secondOption).toHaveClass("focused-option");
         expect(select).toEqualText("Test label 2");
       });
@@ -411,7 +409,7 @@ describe("ic-select", () => {
         const menu = await page.find(
           "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
         );
-        const firstOption = await menu.shadowRoot.querySelectorAll("li")[0];
+        const firstOption = await menu.shadowRoot.querySelectorAll("[role='option']")[0];
         expect(firstOption).toHaveClass("focused-option");
         expect(select).toEqualText("Test label 1");
       });
@@ -429,7 +427,7 @@ describe("ic-select", () => {
         const menu = await page.find(
           "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
         );
-        const secondOption = await menu.shadowRoot.querySelectorAll("li")[1];
+        const secondOption = await menu.shadowRoot.querySelectorAll("[role='option']")[1];
         expect(secondOption).toHaveClass("focused-option");
         expect(select).toEqualText("Test label 2");
       });
@@ -447,7 +445,7 @@ describe("ic-select", () => {
         const menu = await page.find(
           "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
         );
-        const lastOption = await menu.shadowRoot.querySelectorAll("li")[2];
+        const lastOption = await menu.shadowRoot.querySelectorAll("[role='option']")[2];
         expect(lastOption).toHaveClass("focused-option");
         expect(select).toEqualText("Test label 3");
       });
@@ -465,7 +463,7 @@ describe("ic-select", () => {
         const menu = await page.find(
           "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
         );
-        const firstOption = await menu.shadowRoot.querySelectorAll("li")[0];
+        const firstOption = await menu.shadowRoot.querySelectorAll("[role='option']")[0];
         expect(firstOption).toHaveClass("focused-option");
         expect(select).toEqualText("Test label 1");
       });
@@ -483,7 +481,7 @@ describe("ic-select", () => {
         const menu = await page.find(
           "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
         );
-        const lastOption = await menu.shadowRoot.querySelectorAll("li")[2];
+        const lastOption = await menu.shadowRoot.querySelectorAll("[role='option']")[2];
         expect(lastOption).toHaveClass("focused-option");
         expect(select).toEqualText("Test label 3");
       });
@@ -500,9 +498,8 @@ describe("ic-select", () => {
         const menu = await page.find(
           "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
         );
-        const firstOption = await menu.shadowRoot.querySelectorAll("li")[0];
-        const checkIcon = await menu.shadowRoot
-          .querySelectorAll("li")[0]
+        const firstOption = await menu.shadowRoot.querySelectorAll("[role='option']")[0];
+        const checkIcon = firstOption
           .querySelector(".check-icon");
         expect(firstOption).toHaveAttribute("aria-selected");
         expect(checkIcon).not.toBeNull();
@@ -578,8 +575,7 @@ describe("ic-select", () => {
       const menuVisibility = await page.evaluate(() => {
         const menu = document
           .querySelector("ic-select")
-          .shadowRoot.querySelector("ic-menu")
-          .shadowRoot.querySelector("#ic-select-input-0-menu");
+          .shadowRoot.querySelector("ic-menu");
         return window.getComputedStyle(menu).visibility;
       });
       expect(menuVisibility).toBe("hidden");
@@ -611,8 +607,7 @@ describe("ic-select", () => {
       const menuVisibility = await page.evaluate(() => {
         const menu = document
           .querySelector("ic-select")
-          .shadowRoot.querySelector("ic-menu")
-          .shadowRoot.querySelector("#ic-select-input-0-menu");
+          .shadowRoot.querySelector("ic-menu");
         return window.getComputedStyle(menu).visibility;
       });
       expect(menuVisibility).toBe("hidden");
@@ -644,8 +639,7 @@ describe("ic-select", () => {
       const menuVisibility = await page.evaluate(() => {
         const menu = document
           .querySelector("ic-select")
-          .shadowRoot.querySelector("ic-menu")
-          .shadowRoot.querySelector("#ic-select-input-0-menu");
+          .shadowRoot.querySelector("ic-menu");
         return window.getComputedStyle(menu).visibility;
       });
       expect(menuVisibility).toBe("hidden");
@@ -667,8 +661,7 @@ describe("ic-select", () => {
       const menuVisibility = await page.evaluate(() => {
         const menu = document
           .querySelector("ic-select")
-          .shadowRoot.querySelector("ic-menu")
-          .shadowRoot.querySelector("#ic-select-input-0-menu");
+          .shadowRoot.querySelector("ic-menu");
         return window.getComputedStyle(menu).visibility;
       });
       expect(menuVisibility).toBe("hidden");
@@ -690,8 +683,7 @@ describe("ic-select", () => {
       const menuVisibility = await page.evaluate(() => {
         const menu = document
           .querySelector("ic-select")
-          .shadowRoot.querySelector("ic-menu")
-          .shadowRoot.querySelector("#ic-select-input-0-menu");
+          .shadowRoot.querySelector("ic-menu");
         return window.getComputedStyle(menu).visibility;
       });
       expect(menuVisibility).toBe("hidden");
@@ -716,8 +708,7 @@ describe("ic-select", () => {
       const menuVisibility = await page.evaluate(() => {
         const menu = document
           .querySelector("ic-select")
-          .shadowRoot.querySelector("ic-menu")
-          .shadowRoot.querySelector("#ic-select-input-0-menu");
+          .shadowRoot.querySelector("ic-menu");
         return window.getComputedStyle(menu).visibility;
       });
       expect(menuVisibility).toBe("hidden");
@@ -741,8 +732,7 @@ describe("ic-select", () => {
       const menuVisibility = await page.evaluate(() => {
         const menu = document
           .querySelector("ic-select")
-          .shadowRoot.querySelector("ic-menu")
-          .shadowRoot.querySelector("#ic-select-input-0-menu");
+          .shadowRoot.querySelector("ic-menu");
         return window.getComputedStyle(menu).visibility;
       });
       expect(menuVisibility).toBe("hidden");
@@ -769,8 +759,7 @@ describe("ic-select", () => {
       const menuVisibility = await page.evaluate(() => {
         const menu = document
           .querySelector("ic-select")
-          .shadowRoot.querySelector("ic-menu")
-          .shadowRoot.querySelector("#ic-select-input-0-menu");
+          .shadowRoot.querySelector("ic-menu");
         return window.getComputedStyle(menu).visibility;
       });
       expect(menuVisibility).toBe("hidden");
@@ -811,7 +800,7 @@ describe("ic-select", () => {
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
       const firstOptionDescription = await menu.shadowRoot
-        .querySelectorAll("li")[0]
+        .querySelectorAll(".option")[0]
         .querySelector(".option-description");
       expect(firstOptionDescription).toEqualText("Test description 1");
     });
@@ -843,8 +832,7 @@ describe("ic-select", () => {
       const menuVisibility = await page.evaluate(() => {
         const menu = document
           .querySelector("ic-select")
-          .shadowRoot.querySelector("ic-menu")
-          .shadowRoot.querySelector("#ic-select-input-0-menu");
+          .shadowRoot.querySelector("ic-menu");
         return window.getComputedStyle(menu).visibility;
       });
       expect(menuVisibility).toBe("hidden");
@@ -890,7 +878,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const menuOptions = await menu.shadowRoot.querySelectorAll("li");
+      const menuOptions = await menu.shadowRoot.querySelectorAll("[role='option']");
       expect(menuOptions[0]).toHaveAttribute("aria-disabled");
       expect(menuOptions[1]).toHaveClass("focused-option");
     });
@@ -991,7 +979,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const childOptions = await menu.shadowRoot.querySelectorAll("li");
+      const childOptions = await menu.shadowRoot.querySelectorAll("[role='option']");
       expect(childOptions).toHaveLength(3);
       expect(childOptions[0]).toEqualText("Test label 1");
       expect(childOptions[1]).toEqualText("Test label 2");
@@ -1016,7 +1004,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const firstOption = await menu.shadowRoot.querySelectorAll("li")[0];
+      const firstOption = await menu.shadowRoot.querySelectorAll("[role='option']")[0];
       expect(firstOption).toEqualText("Test label 2");
     });
 
@@ -1048,7 +1036,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const firstOption = await menu.shadowRoot.querySelectorAll("li")[0];
+      const firstOption = await menu.shadowRoot.querySelectorAll("[role='option']")[0];
       expect(firstOption.getAttribute("aria-label")).toBe(
         "Test label 1, Test description 1"
       );
@@ -1076,7 +1064,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const firstOption = await menu.shadowRoot.querySelectorAll("li")[0];
+      const firstOption = await menu.shadowRoot.querySelectorAll("[role='option']")[0];
       expect(firstOption.getAttribute("aria-label")).toBe(
         "Test label 1, Test group group"
       );
@@ -1104,7 +1092,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const firstOption = await menu.shadowRoot.querySelectorAll("li")[0];
+      const firstOption = await menu.shadowRoot.querySelectorAll("[role='option']")[0];
       expect(firstOption.getAttribute("aria-label")).toBe(
         "Test label 1, Test description 1, Test group group"
       );
@@ -1158,7 +1146,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const menuOptions = await menu.shadowRoot.querySelectorAll("li");
+      const menuOptions = await menu.shadowRoot.querySelectorAll("[role='option']");
       expect(menuOptions).toHaveLength(4);
       expect(menuOptions[0]).toEqualText("Cappuccino");
       expect(menuOptions[1]).toEqualText("Americano");
@@ -1178,7 +1166,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const menuOptions = await menu.shadowRoot.querySelectorAll("li");
+      const menuOptions = await menu.shadowRoot.querySelectorAll("[role='option']");
       expect(menuOptions).toHaveLength(1);
       expect(menuOptions[0]).toEqualText("No results found");
     });
@@ -1199,7 +1187,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const menuOptions = await menu.shadowRoot.querySelectorAll("li");
+      const menuOptions = await menu.shadowRoot.querySelectorAll("[role='option']");
       expect(menuOptions).toHaveLength(2);
       expect(menuOptions[0]).toEqualText("Filter");
       expect(menuOptions[1]).toEqualText("Flat white");
@@ -1219,7 +1207,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const menuOptions = await menu.shadowRoot.querySelectorAll("li");
+      const menuOptions = await menu.shadowRoot.querySelectorAll("[role='option']");
       expect(menuOptions).toHaveLength(1);
       expect(menuOptions[0]).toEqualText("Latte");
     });
@@ -1249,7 +1237,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const menuOptions = await menu.shadowRoot.querySelectorAll("li");
+      const menuOptions = await menu.shadowRoot.querySelectorAll("[role='option']");
       expect(menuOptions).toHaveLength(1);
       expect(menuOptions[0].textContent.substring(0, 5)).toEqualText("Latte");
     });
@@ -1282,7 +1270,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const menuOptions = await menu.shadowRoot.querySelectorAll("li");
+      const menuOptions = await menu.shadowRoot.querySelectorAll("[role='option']");
       expect(menuOptions).toHaveLength(1);
       expect(menuOptions[0]).toEqualText("No results found");
     });
@@ -1317,7 +1305,7 @@ describe("ic-select", () => {
       const menu = await page.find(
         "ic-select >>> ic-menu >>> #ic-select-input-0-menu"
       );
-      const menuOptions = await menu.shadowRoot.querySelectorAll("li");
+      const menuOptions = await menu.shadowRoot.querySelectorAll("[role='option']");
       expect(menuOptions).toHaveLength(2);
       expect(menuOptions[0]).toEqualText("Filter");
       expect(menuOptions[1]).toEqualText("Latte");

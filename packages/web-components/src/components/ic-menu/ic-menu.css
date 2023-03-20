@@ -5,7 +5,7 @@
  */
 
 @media (prefers-reduced-motion: no-preference) {
-  :host([open]) .menu {
+  :host(.menu[open]) {
     transition: max-height var(--ic-transition-duration-slow);
   }
 }
@@ -26,9 +26,9 @@
   box-shadow: var(--ic-border-focus);
 }
 
-.menu {
+:host(.menu) {
+  outline: none;
   text-decoration: none;
-  list-style-type: none;
   border: 0.063rem solid var(--ic-architectural-400);
   border-radius: var(--ic-border-radius);
   background-color: var(--ic-architectural-white);
@@ -50,7 +50,7 @@
   display: block;
 }
 
-:host([open]) .menu {
+:host(.menu[open])  {
   visibility: visible;
   max-height: 20.125rem;
 }

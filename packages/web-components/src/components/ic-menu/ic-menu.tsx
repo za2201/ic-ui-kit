@@ -133,7 +133,7 @@ export class Menu {
     this.setInputValue(highlightedOptionIndex);
   };
 
-  private menu: HTMLUListElement;
+  private menu: HTMLElement;
   private ungroupedOptions: IcMenuOption[] = [];
   private popperInstance: PopperInstance;
 
@@ -276,7 +276,7 @@ export class Menu {
     );
 
     const getOptionId = (index: number): string =>
-      Array.from(this.host.shadowRoot.querySelectorAll("li"))[index].id;
+      Array.from(this.host.shadowRoot.querySelectorAll("[role='option']"))[index].id;
 
     switch (event.key) {
       case "ArrowDown":
@@ -474,9 +474,9 @@ export class Menu {
 
   private isManualMode = this.activationType === "manual";
 
-  private scrollToSelected = (menu: HTMLUListElement) => {
+  private scrollToSelected = (menu: HTMLElement) => {
     const selectedOption = menu.querySelector(
-      ".option[aria-selected]"
+      "[role='option'][aria-selected]"
     ) as HTMLElement;
 
     if (selectedOption) {
@@ -529,7 +529,7 @@ export class Menu {
     }
     let optionsHeight = 0;
     this.host.shadowRoot
-      .querySelectorAll(".option")
+      .querySelectorAll("[role='option']")
       .forEach((option) => (optionsHeight += option.clientHeight));
     if (optionsHeight >= 320) {
       this.menu.classList.add("menu-scroll");
@@ -599,7 +599,7 @@ export class Menu {
         !this.preventIncorrectTabOrder
       ) {
         const highlightedEl = this.host.shadowRoot.querySelector(
-          `li[data-value="${this.optionHighlighted}"]`
+          `[role="option"][data-value="${this.optionHighlighted}"]`
         ) as HTMLElement;
 
         if (highlightedEl) {
@@ -625,7 +625,7 @@ export class Menu {
     const { open, value } = this;
 
     return (
-      <li
+      <div
         id={this.getOptionId(option.value)}
         class={{
           option: true,
@@ -675,7 +675,7 @@ export class Menu {
           this.parentEl.tagName !== "IC-SEARCH-BAR" && (
             <span class="check-icon" innerHTML={Check} />
           )}
-      </li>
+      </div>
     );
   };
 
@@ -687,53 +687,48 @@ export class Menu {
         class={{
           "full-width": fullWidth,
           "no-focus": this.inputEl?.tagName === "INPUT",
+          'menu': true
         }}
+        id={menuId}
+        role="listbox"
+        aria-label={inputLabel}
+        aria-activedescendant={
+          value != null && value !== "" ? this.getOptionId(value) : ""
+        }
+        tabindex={
+          open && !this.keyboardNav && this.inputEl?.tagName !== "INPUT"
+            ? "0"
+            : "-1"
+        }
+        ref={(el) => (this.menu = el)}
+        onKeyDown={this.handleMenuKeyDown}
+        onKeyUp={this.handleMenuKeyUp}
+        onBlur={this.handleBlur}
       >
-        {options.length !== 0 && (
-          <ul
-            id={menuId}
-            class="menu"
-            role="listbox"
-            aria-label={inputLabel}
-            aria-activedescendant={
-              value != null && value !== "" ? this.getOptionId(value) : ""
+        {this.getSortedOptions(options).map((option, index) => {
+          if (option.children) {
+            if (option.children.length > 0) {
+              return (
+                <div>
+                  <ic-typography
+                    class="option-group-title"
+                    role="presentation"
+                    variant="subtitle-small"
+                  >
+                    <p>{option.label}</p>
+                  </ic-typography>
+                  {option.children.map((childOption) =>
+                    this.displayOption(childOption, index, option)
+                  )}
+                </div>
+              );
+            } else {
+              return null;
             }
-            tabindex={
-              open && !this.keyboardNav && this.inputEl?.tagName !== "INPUT"
-                ? "0"
-                : "-1"
-            }
-            ref={(el) => (this.menu = el)}
-            onKeyDown={this.handleMenuKeyDown}
-            onKeyUp={this.handleMenuKeyUp}
-            onBlur={this.handleBlur}
-          >
-            {this.getSortedOptions(options).map((option, index) => {
-              if (option.children) {
-                if (option.children.length > 0) {
-                  return (
-                    <div>
-                      <ic-typography
-                        class="option-group-title"
-                        role="presentation"
-                        variant="subtitle-small"
-                      >
-                        <p>{option.label}</p>
-                      </ic-typography>
-                      {option.children.map((childOption) =>
-                        this.displayOption(childOption, index, option)
-                      )}
-                    </div>
-                  );
-                } else {
-                  return null;
-                }
-              } else {
-                return this.displayOption(option, index);
-              }
-            })}
-          </ul>
-        )}
+          } else {
+            return this.displayOption(option, index);
+          }
+        })}
       </Host>
     );
   }

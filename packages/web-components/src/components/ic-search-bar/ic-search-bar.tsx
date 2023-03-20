@@ -170,6 +170,7 @@ export class SearchBar {
         }
         this.setMenuChange(true);
         this.filteredOptions = [{ label: this.emptyOptionListText, value: "" }];
+        this.prevNoOption = true;
       }
     }
     this.debounceAriaLiveUpdate();
@@ -565,12 +566,6 @@ export class SearchBar {
     if (this.prevNoOption && this.menu) {
       this.menu.handleSetFirstOption();
       this.prevNoOption = false;
-    }
-    const prevNoOptionsList = this.filteredOptions.find(
-      (filteredOption) => filteredOption.label === this.emptyOptionListText
-    );
-    if (prevNoOptionsList) {
-      this.prevNoOption = true;
     }
   };
 
